@@ -5,6 +5,7 @@ import jomeerkatz.pm.patient_service.dto.PatientResponseDTO;
 import jomeerkatz.pm.patient_service.exception.EmailAlreadyExistsException;
 import jomeerkatz.pm.patient_service.exception.PatientNotFoundException;
 import jomeerkatz.pm.patient_service.grpc.BillingServiceGrpcClient;
+import jomeerkatz.pm.patient_service.kafka.KafkaProducer;
 import jomeerkatz.pm.patient_service.mapper.PatientMapper;
 import jomeerkatz.pm.patient_service.model.Patient;
 import jomeerkatz.pm.patient_service.repository.PatientRepository;
@@ -18,11 +19,15 @@ import java.util.UUID;
 public class PatientService {
     private final PatientRepository patientRepository;
     private final BillingServiceGrpcClient billingServiceGrpcClient;
+    private final KafkaProducer kafkaProducer;
+
     public PatientService (final PatientRepository patientRepository,
-            BillingServiceGrpcClient billingServiceGrpcClient
+            BillingServiceGrpcClient billingServiceGrpcClient,
+                           KafkaProducer kafkaProducer
                            ) {
         this.patientRepository = patientRepository;
         this.billingServiceGrpcClient = billingServiceGrpcClient;
+        this.kafkaProducer = kafkaProducer;
     }
 
     public List<PatientResponseDTO> getPatients() {
@@ -35,10 +40,14 @@ public class PatientService {
         if(patientRepository.existsByEmail(patientRequestDTO.getEmail())) {
             throw new EmailAlreadyExistsException("Patient with this email already exists: " + patientRequestDTO.getEmail());
         }
+
         Patient model = PatientMapper.toModel(patientRequestDTO);
+
         Patient save = patientRepository.save(model);
 
         billingServiceGrpcClient.createBillingAccount(save.getId().toString(), save.getName(), save.getEmail());
+
+        kafkaProducer.sendEvent(save);
 
         return PatientMapper.toDTO(save);
     }
