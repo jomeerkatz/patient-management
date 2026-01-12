@@ -46,6 +46,20 @@ services:
     networks:
       - app-network
 
+  auth-service-db:
+    image: postgres:17
+    container_name: auth-service-db
+    environment:
+      POSTGRES_USER: admin
+      POSTGRES_PASSWORD: password
+      POSTGRES_DB: auth_db
+    ports:
+      - "5002:5432"
+    volumes:
+      - /Users/jkm/Desktop/auth-db-data:/var/lib/postgresql/data
+    networks:
+      - app-network
+
   billing-service:
     build: ./billing-service
     container_name: billing-service
@@ -75,7 +89,6 @@ services:
       KAFKA_OFFSETS_TOPIC_REPLICATION_FACTOR: 1
       KAFKA_TRANSACTION_STATE_LOG_REPLICATION_FACTOR: 1
       KAFKA_TRANSACTION_STATE_LOG_MIN_ISR: 1
-
     networks:
       - app-network
 
