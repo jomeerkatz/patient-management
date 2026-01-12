@@ -1,10 +1,15 @@
 version: '3.8'
 
 services:
+  api-gateway:
+    build: ./api-gateway
+    ports:
+      - "4004:4004"
+    networks:
+      - app-network
+
   patient-service:
     build: ./patient-service
-    ports:
-      - "4000:4000"
     environment:
       SPRING_DATASOURCE_URL: jdbc:postgresql://patient-service-db:5432/patient_db
       SPRING_DATASOURCE_USERNAME: admin
