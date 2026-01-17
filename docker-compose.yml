@@ -57,12 +57,20 @@ services:
       - "5002:5432"
     volumes:
       - /Users/jkm/Desktop/auth-db-data:/var/lib/postgresql/data
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U admin -d auth_db"]
+      interval: 5s
+      timeout: 5s
+      retries: 5
     networks:
       - app-network
 
   auth-service:
     build: ./auth-service
     container_name: auth-service
+    depends_on:
+      auth-service-db:
+        condition: service_healthy
     environment:
         SPRING_DATASOURCE_URL: jdbc:postgresql://auth-service-db:5432/auth_db
         SPRING_DATASOURCE_USERNAME: admin
