@@ -1,0 +1,12 @@
+<component name="ProjectRunConfigurationManager">
+  <configuration default="false" name="auth-service" type="Application" factoryName="Application">
+    <envs>
+      <env name="JWT_SECRET" value="aTrV62/QAbF1ZcUbaR1dTEm+Y7Y6gIZINrQAIv9XMBXr0ct09e+ugP20SpwFwBrws6u4eyuXBZFHC3eZJfeAnw==" />
+    </envs>
+    <option name="MAIN_CLASS_NAME" value="jomeerkatz.pm.auth_service.AuthServiceApplication" />
+    <module name="auth-service" />
+    <method v="2">
+      <option name="Make" enabled="true" />
+    </method>
+  </configuration>
+</component>
