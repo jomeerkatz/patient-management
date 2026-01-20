@@ -1,10 +1,13 @@
 package jomeerkatz.pm.auth_service.util;
 
+import io.jsonwebtoken.JwtException;
 import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.security.Keys;
+import io.jsonwebtoken.security.SignatureException;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
 
+import javax.crypto.SecretKey;
 import java.nio.charset.StandardCharsets;
 import java.security.Key;
 import java.util.Base64;
@@ -25,7 +28,7 @@ public class JwtUtil {
         //  algorithm = "HmacSHA256"
         //  encoded = [83, 101, 99, 114, 101, 116, ...]
         //}
-        this.secretKey = Keys.hmacShaKeyFor(keyBites);
+        this.secretKey = Keys.hmacShaKeyFor(keyBites); // hmac is a signature algorithm
     }
 
     public String generateToken(String email, String role) {
@@ -37,5 +40,17 @@ public class JwtUtil {
                 .signWith(secretKey)
                 .compact(); // example of the String JWT TOKEN: eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiJqb0BleGFtcGxlLmNvbSIsInJvbGUiOiJBRE1JTiIsImlhdCI6MTY5MDAwMDAwMCwiZXhwIjoxNjkwMDM2MDAwfQ.Qx...
                             // signed
+    }
+
+    public void validateToken(String token) {
+        try {
+            Jwts.parser().verifyWith((SecretKey) secretKey)
+                    .build()
+                    .parseSignedClaims(token);
+        } catch (SignatureException e) {
+            throw new JwtException("invalid jwt signature");
+        } catch (JwtException e) {
+            throw new JwtException("invalid jwt");
+        }
     }
 }

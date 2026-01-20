@@ -1,5 +1,6 @@
 package jomeerkatz.pm.auth_service.service;
 
+import io.jsonwebtoken.JwtException;
 import io.jsonwebtoken.security.Password;
 import jomeerkatz.pm.auth_service.dto.LoginRequestDTO;
 import jomeerkatz.pm.auth_service.model.User;
@@ -29,5 +30,14 @@ public class AuthService {
                         currentUser.getPassword()))
                 .map(currentUser -> jwtUtil.generateToken(currentUser.getEmail(), currentUser.getRole()));
         return token;
+    }
+
+    public boolean validateToken(String token) {
+        try {
+            jwtUtil.validateToken(token);
+            return true;
+        } catch (JwtException e) {
+            return false;
+        }
     }
 }
