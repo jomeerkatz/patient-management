@@ -14,7 +14,7 @@ public class JwtValidationGatewayFilterFactory extends AbstractGatewayFilterFact
     // + used for async requests to other applications
 
     public JwtValidationGatewayFilterFactory(WebClient.Builder webClientBuilder,
-                                             @Value("${auth.service.urle}") String authServiceUrl){
+                                             @Value("${auth.service.url}") String authServiceUrl){
         this.webClient = webClientBuilder.baseUrl(authServiceUrl).build();
     }
 
