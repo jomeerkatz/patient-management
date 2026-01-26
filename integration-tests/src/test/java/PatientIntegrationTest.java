@@ -1,6 +1,6 @@
 import io.restassured.RestAssured;
-import io.restassured.response.Response;
 import org.junit.jupiter.api.BeforeAll;
+import org.junit.jupiter.api.Test;
 
 import static io.restassured.RestAssured.given;
 import static org.hamcrest.Matchers.notNullValue;
@@ -10,10 +10,8 @@ public class PatientIntegrationTest {
     static void setUp() {
         RestAssured.baseURI = "http://localhost:4004";
     }
-
-    static void shouldReturnPatientsWithValidToken() {
-
-
+    @Test
+    public  void shouldReturnPatientsWithValidToken() {
         String loginPayload = """
                     {
                         "email": "testuser@test.com",
