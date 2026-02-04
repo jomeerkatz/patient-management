@@ -5,6 +5,8 @@ services:
     build: ./api-gateway
     ports:
       - "4004:4004"
+    environment:
+      AUTH_SERVICE_URL: http://auth-service:4005/
     networks:
       - app-network
 
@@ -77,9 +79,7 @@ services:
         SPRING_DATASOURCE_PASSWORD: password
         SPRING_JPA_HIBERNATE_DDL_AUTO: update
         SPRING_SQL_INIT_MODE: always
-        JWT_SECRET: ${JWT_SECRET}
-    ports:
-      - "4005:4005"
+        JWT_SECRET: ySAjh6mh2M6dRnEUXeZKMiCqHrJn65tAhKdj16pOXjtBJb1vNQ2nPSj8qRZdNmv31hHldnuVlzsHjdL/ODhunw==
     networks:
       - app-network
 
