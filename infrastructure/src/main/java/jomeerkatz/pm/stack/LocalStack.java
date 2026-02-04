@@ -37,7 +37,7 @@ public class LocalStack extends Stack {
                 "patient-service" + "-db");
         CfnHealthCheck authDbHealthCheck = createDbHealthCheck(authServiceDB,
                 "AuthServiceDBHealthCheck");
-        CfnHealthCheck patientDbHealthCheck = createDbHealthCheck(authServiceDB,
+        CfnHealthCheck patientDbHealthCheck = createDbHealthCheck(patientServiceDB,
                 "PatientServiceDBHealthCheck");
         CfnCluster mskCluster = createMskCluster();
         this.ecsCluster = createEcsCluster();
